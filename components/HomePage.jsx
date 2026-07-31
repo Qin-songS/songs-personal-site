@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import LanguageSwitch from "./LanguageSwitch";
 import OrbitMark from "./OrbitMark";
@@ -176,8 +175,8 @@ export default function HomePage({ locale }) {
 
   const noteHref =
     locale === "en"
-      ? "/notes/why-this-site"
-      : "/zh/notes/why-this-site";
+      ? "/notes/why-this-site/"
+      : "/zh/notes/why-this-site/";
 
   return (
     <>
@@ -277,7 +276,7 @@ export default function HomePage({ locale }) {
           </div>
 
           <div className="notes-layout">
-            <Link className="featured-note" href={noteHref}>
+            <a className="featured-note" href={noteHref}>
               <div className="note-index">Nº 001</div>
               <div>
                 <p className="note-meta">
@@ -289,7 +288,7 @@ export default function HomePage({ locale }) {
               <span className="note-link">
                 {t.noteLink} <span aria-hidden="true">↗</span>
               </span>
-            </Link>
+            </a>
 
             <div className="empty-note">
               <p className="note-meta">{t.noteEmpty}</p>
@@ -346,4 +345,3 @@ export default function HomePage({ locale }) {
     </>
   );
 }
-

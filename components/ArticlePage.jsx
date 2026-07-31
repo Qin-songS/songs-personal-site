@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect } from "react";
 import LanguageSwitch from "./LanguageSwitch";
 
@@ -65,17 +64,17 @@ export default function ArticlePage({ locale }) {
   return (
     <>
       <header className="site-header article-header">
-        <Link className="brand-lockup" href={locale === "en" ? "/" : "/zh"}>
+        <a className="brand-lockup" href={locale === "en" ? "/" : "/zh/"}>
           <span className="brand-dot" aria-hidden="true" />
           songs.com
-        </Link>
+        </a>
         <LanguageSwitch locale={locale} article />
       </header>
 
       <main className="article-page">
-        <Link className="article-back" href={locale === "en" ? "/" : "/zh"}>
+        <a className="article-back" href={locale === "en" ? "/" : "/zh/"}>
           <span aria-hidden="true">←</span> {t.back}
-        </Link>
+        </a>
 
         <article>
           <header className="article-hero">
@@ -102,15 +101,14 @@ export default function ArticlePage({ locale }) {
           </div>
         </article>
 
-        <Link
+        <a
           className="article-next"
           href={`${locale === "en" ? "" : "/zh"}/#work`}
         >
           <span>{t.next}</span>
           <span aria-hidden="true">↗</span>
-        </Link>
+        </a>
       </main>
     </>
   );
 }
-
