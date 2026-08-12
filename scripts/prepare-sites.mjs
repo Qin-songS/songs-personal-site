@@ -12,6 +12,19 @@ await copyFile(
   resolve(dist, "server", "index.js"),
 );
 await copyFile(
+  resolve(root, "server", "ai.js"),
+  resolve(dist, "server", "ai.js"),
+);
+await copyFile(
   resolve(root, ".openai", "hosting.json"),
   resolve(dist, ".openai", "hosting.json"),
 );
+
+for (const page of ["thoughts", "about", "profile"]) {
+  const pageDirectory = resolve(dist, "field", page);
+  await mkdir(pageDirectory, { recursive: true });
+  await copyFile(
+    resolve(dist, "field", "index.html"),
+    resolve(pageDirectory, "index.html"),
+  );
+}

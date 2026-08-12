@@ -2,8 +2,9 @@
   "name": "songs-personal-archive",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "node --env-file-if-exists=.env.local --use-env-proxy ./node_modules/vite/bin/vite.js",
     "build": "vite build && node scripts/prepare-sites.mjs",
     "preview": "vite preview"
   },

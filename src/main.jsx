@@ -2,27 +2,33 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import HomePage from "../components/HomePage";
 import ArticlePage from "../components/ArticlePage";
+import InteractionLab from "../components/InteractionLab";
+import FieldLab from "../components/FieldLab";
 import "./styles.css";
+import "./lab.css";
+import "./field.css";
 
 const path = window.location.pathname.replace(/\/+$/, "") || "/";
 const locale = path.startsWith("/zh") ? "zh" : "en";
 const isArticle = path.includes("/notes/why-this-site");
+const isLab = path === "/lab";
+const isField = path === "/field" || path.startsWith("/field/");
 
 const pageTitle = isArticle
   ? locale === "zh"
     ? "为什么建立这个网站 — songs.com"
     : "Why this site exists — songs.com"
   : locale === "zh"
-    ? "作品、文章与履历 — songs.com"
-    : "songs.com — Work, notes & résumé";
+    ? "秦松 / Songs — 个人网站"
+    : "Qin Song / Songs — Personal website";
 
 const pageDescription = isArticle
   ? locale === "zh"
     ? "关于为作品与想法建立一个长期归档空间的简短说明。"
     : "A short note on building a durable home for work and ideas."
   : locale === "zh"
-    ? "songs.com 的中文个人主页：作品、文章、履历与联系方式。"
-    : "An English-first bilingual personal archive for selected work, writing, experience, and contact.";
+    ? "秦松（Songs）的双语个人网站：目标、思考、个人档案、AI 助手与联系方式。"
+    : "The bilingual personal website of Qin Song (Songs): purpose, thoughts, profile, AI assistant, and contact.";
 
 document.title = pageTitle;
 document.documentElement.lang = locale === "zh" ? "zh-CN" : "en";
@@ -32,7 +38,11 @@ document
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    {isArticle ? (
+    {isField ? (
+      <FieldLab />
+    ) : isLab ? (
+      <InteractionLab />
+    ) : isArticle ? (
       <ArticlePage locale={locale} />
     ) : (
       <HomePage locale={locale} />

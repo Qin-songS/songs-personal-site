@@ -23,7 +23,9 @@ yarn-error.log*
 
 # environment files
 .env*
+!.env.example
 
 # hosting artifacts
 *.tgz
 *.tar.gz
+/.netlify/

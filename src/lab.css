@@ -1,0 +1,1138 @@
+.lab-body {
+  overflow: hidden;
+  color: #dffbff;
+  background: #03070a;
+}
+
+.lab-body button,
+.lab-body a {
+  font-family: inherit;
+}
+
+.lab-shell {
+  --lab-bg: #03070a;
+  --lab-surface: #071014;
+  --lab-ink: #dffbff;
+  --lab-muted: #6f858b;
+  --lab-line: rgba(131, 221, 235, 0.18);
+  --lab-signal: #70edff;
+  --lab-status: #ffad66;
+  position: relative;
+  overflow: hidden;
+  min-height: 100svh;
+  color: var(--lab-ink);
+  background:
+    radial-gradient(circle at 50% 50%, rgba(30, 174, 198, 0.075), transparent 34%),
+    var(--lab-bg);
+  font-family: "Arial Narrow", "Roboto Condensed", Arial, sans-serif;
+  isolation: isolate;
+}
+
+.lab-shell::before {
+  position: fixed;
+  z-index: 20;
+  inset: 0;
+  border: 1px solid rgba(112, 237, 255, 0.15);
+  box-shadow: inset 0 0 7rem rgba(0, 0, 0, 0.58);
+  content: "";
+  pointer-events: none;
+}
+
+.lab-grid {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(112, 237, 255, 0.042) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(112, 237, 255, 0.042) 1px, transparent 1px);
+  background-size: clamp(42px, 5vw, 76px) clamp(42px, 5vw, 76px);
+  mask-image: radial-gradient(circle at 50% 54%, #000, transparent 78%);
+}
+
+.lab-scanline {
+  position: fixed;
+  z-index: 19;
+  top: -12%;
+  right: 0;
+  left: 0;
+  height: 14%;
+  background: linear-gradient(transparent, rgba(112, 237, 255, 0.035), transparent);
+  animation: lab-scan 8s linear infinite;
+  pointer-events: none;
+}
+
+.lab-header {
+  position: relative;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: minmax(15rem, 0.8fr) 2fr auto;
+  align-items: stretch;
+  min-height: 5.5rem;
+  border-bottom: 1px solid var(--lab-line);
+  background: rgba(3, 7, 10, 0.72);
+  backdrop-filter: blur(18px);
+}
+
+.lab-brand {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: 1fr 1fr;
+  column-gap: 0.7rem;
+  align-items: end;
+  width: fit-content;
+  padding: 1.15rem clamp(1rem, 2.5vw, 2.5rem);
+  border-right: 1px solid var(--lab-line);
+  color: var(--lab-ink);
+  letter-spacing: 0.12em;
+}
+
+.lab-brand-mark {
+  grid-row: 1 / 3;
+  align-self: center;
+  width: 0.68rem;
+  height: 0.68rem;
+  background: var(--lab-signal);
+  box-shadow: 0 0 1.15rem var(--lab-signal);
+  transform: rotate(45deg);
+}
+
+.lab-brand > span:nth-child(2) {
+  align-self: end;
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.lab-brand small {
+  align-self: start;
+  color: var(--lab-muted);
+  font-family: "Courier New", monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.09em;
+}
+
+.lab-concept-nav {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.lab-concept-nav button {
+  position: relative;
+  display: flex;
+  gap: 0.7rem;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  border: 0;
+  border-right: 1px solid var(--lab-line);
+  color: var(--lab-muted);
+  background: transparent;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 180ms ease, background 180ms ease;
+}
+
+.lab-concept-nav button::after {
+  position: absolute;
+  right: 22%;
+  bottom: -1px;
+  left: 22%;
+  height: 2px;
+  background: var(--lab-signal);
+  box-shadow: 0 0 0.8rem var(--lab-signal);
+  content: "";
+  transform: scaleX(0);
+  transition: transform 220ms ease;
+}
+
+.lab-concept-nav button:hover,
+.lab-concept-nav button.is-active {
+  color: var(--lab-ink);
+  background: rgba(112, 237, 255, 0.035);
+}
+
+.lab-concept-nav button.is-active::after {
+  transform: scaleX(1);
+}
+
+.lab-concept-nav button span {
+  color: var(--lab-signal);
+  font-family: "Courier New", monospace;
+  font-size: 0.56rem;
+}
+
+.lab-language {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  padding: 0 clamp(1rem, 2vw, 2rem);
+  border: 0;
+  color: var(--lab-muted);
+  background: transparent;
+  font-family: "Courier New", monospace;
+  font-size: 0.65rem;
+  cursor: pointer;
+}
+
+.lab-language i {
+  font-style: normal;
+  opacity: 0.35;
+}
+
+.lab-language .is-active {
+  color: var(--lab-signal);
+}
+
+.lab-main {
+  min-height: calc(100svh - 7.8rem);
+  animation: lab-enter 600ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.lab-stage {
+  position: relative;
+  overflow: hidden;
+  min-height: calc(100svh - 7.8rem);
+}
+
+.lab-stage-copy {
+  position: absolute;
+  z-index: 6;
+  top: clamp(2rem, 5vh, 4.5rem);
+  left: clamp(1.25rem, 4vw, 4.75rem);
+  width: min(31rem, 40vw);
+  pointer-events: none;
+}
+
+.lab-stage-copy > p {
+  margin: 0 0 1.1rem;
+  color: var(--lab-signal);
+  font-family: "Courier New", monospace;
+  font-size: 0.59rem;
+  letter-spacing: 0.14em;
+}
+
+.lab-stage-copy h1 {
+  max-width: 13ch;
+  margin: 0;
+  font-size: clamp(2.5rem, 5vw, 5.8rem);
+  font-weight: 500;
+  letter-spacing: -0.065em;
+  line-height: 0.88;
+  text-wrap: balance;
+}
+
+.lab-stage-copy > span {
+  display: block;
+  max-width: 26rem;
+  margin-top: 1.25rem;
+  color: var(--lab-muted);
+  font-size: clamp(0.78rem, 1vw, 0.95rem);
+  line-height: 1.55;
+}
+
+.lab-footer {
+  position: fixed;
+  z-index: 12;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  min-height: 2.3rem;
+  padding: 0 clamp(1rem, 2.5vw, 2.5rem);
+  border-top: 1px solid var(--lab-line);
+  color: var(--lab-muted);
+  background: rgba(3, 7, 10, 0.78);
+  font-family: "Courier New", monospace;
+  font-size: 0.54rem;
+  letter-spacing: 0.1em;
+  backdrop-filter: blur(14px);
+}
+
+.lab-footer span:first-child i {
+  display: inline-block;
+  width: 0.38rem;
+  height: 0.38rem;
+  margin-right: 0.5rem;
+  border-radius: 50%;
+  background: var(--lab-signal);
+  box-shadow: 0 0 0.7rem var(--lab-signal);
+  animation: status-pulse 1.6s ease-in-out infinite;
+}
+
+.lab-footer span:nth-child(2) {
+  color: var(--lab-ink);
+}
+
+.lab-footer span:last-child {
+  justify-self: end;
+}
+
+/* Concept 01: a relational archive */
+.network-canvas {
+  position: absolute;
+  inset: clamp(8rem, 17vh, 12rem) 3vw 2.3rem 32vw;
+}
+
+.network-canvas svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.network-canvas line {
+  stroke: rgba(112, 237, 255, 0.13);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  transition: stroke 240ms ease, stroke-width 240ms ease;
+}
+
+.network-canvas line.is-active {
+  stroke: rgba(112, 237, 255, 0.72);
+  stroke-width: 1.5;
+  filter: drop-shadow(0 0 5px rgba(112, 237, 255, 0.65));
+}
+
+.network-node {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  display: grid;
+  gap: 0.2rem;
+  min-width: 6.2rem;
+  padding: 0;
+  border: 0;
+  color: var(--lab-muted);
+  background: transparent;
+  text-align: left;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+}
+
+.network-node::before {
+  position: absolute;
+  top: 50%;
+  left: -1.4rem;
+  width: 0.46rem;
+  height: 0.46rem;
+  border: 1px solid currentColor;
+  content: "";
+  transform: translateY(-50%) rotate(45deg);
+  transition: background 200ms ease, box-shadow 200ms ease, transform 200ms ease;
+}
+
+.network-node span {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.network-node small {
+  font-family: "Courier New", monospace;
+  font-size: 0.52rem;
+}
+
+.network-node:hover,
+.network-node:focus-visible,
+.network-node.is-active {
+  color: var(--lab-ink);
+  outline: 0;
+}
+
+.network-node.is-active::before {
+  background: var(--lab-signal);
+  box-shadow: 0 0 1rem var(--lab-signal);
+  transform: translateY(-50%) rotate(135deg) scale(1.4);
+}
+
+.network-node.is-core {
+  width: 9rem;
+  height: 9rem;
+  place-content: center;
+  border: 1px solid rgba(112, 237, 255, 0.32);
+  border-radius: 50%;
+  text-align: center;
+}
+
+.network-node.is-core::before {
+  top: 50%;
+  left: 50%;
+  width: 58%;
+  height: 58%;
+  border: 1px dashed rgba(112, 237, 255, 0.48);
+  border-radius: 50%;
+  background: rgba(112, 237, 255, 0.03);
+  transform: translate(-50%, -50%);
+  animation: network-core 12s linear infinite;
+}
+
+.network-node.is-core span,
+.network-node.is-core small {
+  position: relative;
+  z-index: 2;
+}
+
+.network-readout {
+  position: absolute;
+  right: 0;
+  bottom: 3vh;
+  width: min(24rem, 40%);
+  padding: 1.1rem 0 0 1.2rem;
+  border-top: 1px solid var(--lab-signal);
+  border-left: 1px solid var(--lab-line);
+  animation: readout-in 320ms ease both;
+}
+
+.network-readout small,
+.assembly-summary small {
+  color: var(--lab-signal);
+  font-family: "Courier New", monospace;
+  font-size: 0.52rem;
+  letter-spacing: 0.12em;
+}
+
+.network-readout strong {
+  display: block;
+  margin-top: 0.7rem;
+  font-size: clamp(1.15rem, 1.8vw, 1.7rem);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+
+.network-readout p {
+  margin: 0.65rem 0 0;
+  color: var(--lab-muted);
+  font-size: 0.72rem;
+  line-height: 1.5;
+}
+
+/* Concept 02: an interface that notices attention */
+.resonance-stage::after {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--pointer-x) var(--pointer-y), rgba(112, 237, 255, 0.12), transparent 17%);
+  content: "";
+  pointer-events: none;
+  transition: background 80ms linear;
+}
+
+.field-plane {
+  position: absolute;
+  inset: 0;
+}
+
+.field-plane::before,
+.field-plane::after {
+  position: absolute;
+  top: 54%;
+  left: 61%;
+  width: min(54vw, 46rem);
+  aspect-ratio: 1;
+  border: 1px solid rgba(112, 237, 255, 0.1);
+  border-radius: 50%;
+  content: "";
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.field-plane::after {
+  width: min(38vw, 32rem);
+  border-style: dashed;
+  animation: field-turn 25s linear infinite reverse;
+}
+
+.field-reticle {
+  position: absolute;
+  z-index: 2;
+  left: var(--pointer-x);
+  top: var(--pointer-y);
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid rgba(112, 237, 255, 0.58);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: left 60ms linear, top 60ms linear;
+  pointer-events: none;
+}
+
+.field-reticle::before,
+.field-reticle::after {
+  position: absolute;
+  background: rgba(112, 237, 255, 0.58);
+  content: "";
+}
+
+.field-reticle::before {
+  top: 50%;
+  left: -0.55rem;
+  width: calc(100% + 1.1rem);
+  height: 1px;
+}
+
+.field-reticle::after {
+  top: -0.55rem;
+  left: 50%;
+  width: 1px;
+  height: calc(100% + 1.1rem);
+}
+
+.energy-core {
+  position: absolute;
+  z-index: 3;
+  top: 54%;
+  left: 61%;
+  display: grid;
+  place-items: center;
+  width: clamp(12rem, 24vw, 22rem);
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  color: var(--lab-ink);
+  background: transparent;
+  transform: translate(calc(-50% + var(--core-x)), calc(-50% + var(--core-y)));
+  cursor: crosshair;
+}
+
+.energy-core::before {
+  position: absolute;
+  width: 46%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, #edfeff 0 4%, var(--lab-signal) 6%, rgba(25, 160, 183, 0.28) 34%, transparent 68%);
+  box-shadow: 0 0 5rem rgba(112, 237, 255, 0.24);
+  content: "";
+  animation: core-breathe 3.2s ease-in-out infinite;
+}
+
+.energy-core::after {
+  position: absolute;
+  width: 62%;
+  aspect-ratio: 1;
+  border: 1px solid rgba(112, 237, 255, 0.36);
+  border-radius: 50%;
+  content: "";
+  transition: transform 500ms ease, opacity 500ms ease;
+}
+
+.energy-core.pulse-1::after {
+  animation: manual-pulse 700ms ease-out;
+}
+
+.energy-core.pulse-0::after {
+  animation: manual-pulse-alt 700ms ease-out;
+}
+
+.energy-orbit {
+  position: absolute;
+  border: 1px solid rgba(112, 237, 255, 0.28);
+  border-radius: 50%;
+}
+
+.energy-orbit-a {
+  width: 78%;
+  height: 35%;
+  transform: rotate(24deg);
+  animation: energy-a 9s linear infinite;
+}
+
+.energy-orbit-b {
+  width: 76%;
+  height: 34%;
+  transform: rotate(-62deg);
+  animation: energy-b 11s linear infinite reverse;
+}
+
+.energy-orbit-c {
+  width: 92%;
+  height: 92%;
+  border-style: dashed;
+  animation: field-turn 18s linear infinite;
+}
+
+.energy-center {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  gap: 0.25rem;
+  place-items: center;
+  font-size: clamp(0.75rem, 1.2vw, 1rem);
+  font-weight: 800;
+  letter-spacing: 0.15em;
+}
+
+.energy-center small {
+  color: var(--lab-signal);
+  font-family: "Courier New", monospace;
+  font-size: 0.46rem;
+}
+
+.field-signal {
+  position: absolute;
+  z-index: 5;
+  top: var(--y);
+  left: var(--x);
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 0 0.55rem;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  color: var(--lab-muted);
+  background: transparent;
+  text-align: left;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+}
+
+.field-signal i {
+  grid-row: 1 / 3;
+  width: 0.48rem;
+  height: 0.48rem;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+}
+
+.field-signal span {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.field-signal small {
+  font-size: 0.58rem;
+}
+
+.field-signal:hover,
+.field-signal:focus-visible,
+.field-signal.is-active {
+  color: var(--lab-ink);
+  outline: 0;
+}
+
+.field-signal.is-active i {
+  background: var(--lab-signal);
+  box-shadow: 0 0 1.2rem var(--lab-signal);
+}
+
+.field-status {
+  position: absolute;
+  right: 3.5vw;
+  bottom: 4.2rem;
+  display: grid;
+  min-width: 13rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid var(--lab-line);
+  font-family: "Courier New", monospace;
+  text-align: right;
+}
+
+.field-status span {
+  color: var(--lab-muted);
+  font-size: 0.48rem;
+  letter-spacing: 0.12em;
+}
+
+.field-status strong {
+  margin-top: 0.35rem;
+  color: var(--lab-signal);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+}
+
+/* Concept 03: a portrait assembled by the visitor */
+.assembly-plane {
+  position: absolute;
+  inset: clamp(8rem, 15vh, 10rem) 2.5vw 2.3rem 34vw;
+}
+
+.assembly-plane::before {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 70%;
+  height: 70%;
+  border: 1px solid rgba(112, 237, 255, 0.08);
+  border-radius: 50%;
+  content: "";
+  transform: translate(-50%, -50%);
+}
+
+.assembly-progress {
+  position: absolute;
+  top: 52%;
+  left: 51%;
+  display: grid;
+  place-items: center;
+  width: clamp(13rem, 25vw, 23rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: conic-gradient(var(--lab-signal) var(--progress), rgba(112, 237, 255, 0.09) 0);
+  box-shadow: 0 0 4rem rgba(112, 237, 255, 0.06);
+  transform: translate(-50%, -50%);
+  transition: background 500ms ease;
+}
+
+.assembly-progress::before {
+  position: absolute;
+  inset: 2px;
+  border-radius: 50%;
+  background: var(--lab-bg);
+  content: "";
+}
+
+.assembly-portrait {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  align-content: center;
+  width: 77%;
+  height: 77%;
+  overflow: hidden;
+  border: 1px solid rgba(112, 237, 255, 0.2);
+  border-radius: 50%;
+  text-align: center;
+}
+
+.assembly-portrait::before {
+  position: absolute;
+  right: 20%;
+  bottom: -19%;
+  left: 20%;
+  height: 68%;
+  border: 1px solid rgba(112, 237, 255, 0.23);
+  border-radius: 50% 50% 0 0;
+  background: linear-gradient(rgba(112, 237, 255, 0.045), transparent);
+  content: "";
+}
+
+.assembly-portrait::after {
+  position: absolute;
+  top: 16%;
+  left: 50%;
+  width: 25%;
+  aspect-ratio: 0.82;
+  border: 1px solid rgba(112, 237, 255, 0.28);
+  border-radius: 48% 48% 44% 44%;
+  background: rgba(112, 237, 255, 0.035);
+  content: "";
+  transform: translateX(-50%);
+}
+
+.assembly-portrait small,
+.assembly-portrait strong,
+.assembly-portrait p {
+  position: relative;
+  z-index: 2;
+}
+
+.assembly-portrait small {
+  color: var(--lab-muted);
+  font-family: "Courier New", monospace;
+  font-size: 0.45rem;
+  letter-spacing: 0.12em;
+}
+
+.assembly-portrait strong {
+  margin-top: 0.25rem;
+  font-family: "Courier New", monospace;
+  font-size: clamp(2rem, 4vw, 4.5rem);
+  font-weight: 400;
+  line-height: 1;
+}
+
+.assembly-portrait p {
+  max-width: 68%;
+  margin: 0.7rem auto 0;
+  color: var(--lab-signal);
+  font-family: "Courier New", monospace;
+  font-size: 0.48rem;
+  line-height: 1.45;
+  text-transform: uppercase;
+}
+
+.portrait-scan {
+  position: absolute;
+  z-index: 3;
+  right: 8%;
+  left: 8%;
+  height: 1px;
+  background: var(--lab-signal);
+  box-shadow: 0 0 0.9rem var(--lab-signal);
+  animation: portrait-scan 3.4s ease-in-out infinite;
+}
+
+.identity-fragment {
+  position: absolute;
+  z-index: 4;
+  top: var(--y);
+  left: var(--x);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.05rem 0.55rem;
+  min-width: 6rem;
+  padding: 0.65rem 0;
+  border: 0;
+  border-top: 1px solid var(--lab-line);
+  color: var(--lab-muted);
+  background: transparent;
+  text-align: left;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  animation: fragment-in 500ms var(--delay) ease both;
+}
+
+.identity-fragment > span {
+  grid-row: 1 / 3;
+  color: var(--lab-signal);
+  font-family: "Courier New", monospace;
+  font-size: 0.48rem;
+}
+
+.identity-fragment strong {
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+}
+
+.identity-fragment small {
+  font-size: 0.57rem;
+}
+
+.identity-fragment:hover,
+.identity-fragment:focus-visible,
+.identity-fragment.is-selected {
+  border-color: var(--lab-signal);
+  color: var(--lab-ink);
+  outline: 0;
+}
+
+.identity-fragment.is-selected::after {
+  position: absolute;
+  top: -0.2rem;
+  right: 0;
+  color: var(--lab-signal);
+  content: "+";
+  font-family: "Courier New", monospace;
+  font-size: 0.8rem;
+  text-shadow: 0 0 0.7rem var(--lab-signal);
+}
+
+.assembly-summary {
+  position: absolute;
+  right: 1vw;
+  bottom: 3vh;
+  display: grid;
+  width: min(22rem, 38%);
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--lab-line);
+}
+
+.assembly-summary strong {
+  margin-top: 0.55rem;
+  color: var(--lab-muted);
+  font-size: clamp(0.9rem, 1.4vw, 1.25rem);
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.assembly-summary.is-complete {
+  border-color: var(--lab-status);
+}
+
+.assembly-summary.is-complete small {
+  color: var(--lab-status);
+}
+
+.assembly-summary.is-complete strong {
+  color: var(--lab-ink);
+}
+
+.assembly-summary button {
+  width: fit-content;
+  margin-top: 0.8rem;
+  padding: 0 0 0.3rem;
+  border: 0;
+  border-bottom: 1px solid var(--lab-muted);
+  color: var(--lab-muted);
+  background: transparent;
+  font-family: "Courier New", monospace;
+  font-size: 0.48rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+}
+
+@keyframes lab-enter {
+  from { opacity: 0; transform: translateY(0.75rem); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes lab-scan {
+  to { transform: translateY(850%); }
+}
+
+@keyframes status-pulse {
+  50% { opacity: 0.35; }
+}
+
+@keyframes network-core {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes readout-in {
+  from { opacity: 0; transform: translateY(0.6rem); }
+}
+
+@keyframes field-turn {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes energy-a {
+  to { transform: rotate(384deg); }
+}
+
+@keyframes energy-b {
+  to { transform: rotate(298deg); }
+}
+
+@keyframes core-breathe {
+  50% { transform: scale(1.12); opacity: 0.78; }
+}
+
+@keyframes manual-pulse {
+  from { transform: scale(0.75); opacity: 1; }
+  to { transform: scale(1.65); opacity: 0; }
+}
+
+@keyframes manual-pulse-alt {
+  from { transform: scale(0.74); opacity: 1; }
+  to { transform: scale(1.62); opacity: 0; }
+}
+
+@keyframes portrait-scan {
+  0%, 100% { top: 15%; opacity: 0; }
+  20%, 80% { opacity: 0.8; }
+  50% { top: 84%; }
+}
+
+@keyframes fragment-in {
+  from { opacity: 0; transform: translate(-50%, calc(-50% + 0.7rem)); }
+}
+
+@media (max-width: 900px) {
+  .lab-body { overflow: auto; }
+
+  .lab-header {
+    grid-template-columns: 1fr auto;
+  }
+
+  .lab-brand {
+    border-right: 0;
+  }
+
+  .lab-concept-nav {
+    grid-column: 1 / 3;
+    grid-row: 2;
+    order: 3;
+    min-height: 3.2rem;
+    border-top: 1px solid var(--lab-line);
+  }
+
+  .lab-concept-nav button {
+    padding: 0.75rem 0.35rem;
+    font-size: 0.56rem;
+  }
+
+  .lab-language {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .lab-main,
+  .lab-stage {
+    min-height: 54rem;
+  }
+
+  .lab-stage-copy {
+    top: 2rem;
+    width: calc(100% - 2.5rem);
+  }
+
+  .lab-stage-copy h1 {
+    font-size: clamp(2.5rem, 10vw, 4.5rem);
+  }
+
+  .network-canvas,
+  .assembly-plane {
+    inset: 14rem 1.25rem 2.3rem;
+  }
+
+  .field-plane {
+    top: 8rem;
+  }
+
+  .energy-core,
+  .field-plane::before,
+  .field-plane::after {
+    left: 50%;
+    top: 58%;
+  }
+
+  .field-signal {
+    top: calc(var(--y) + 8%);
+  }
+
+  .network-readout,
+  .assembly-summary {
+    width: min(19rem, 48%);
+  }
+}
+
+@media (max-width: 580px) {
+  .lab-header {
+    min-height: 4.6rem;
+  }
+
+  .lab-brand {
+    padding: 0.9rem 1rem;
+  }
+
+  .lab-brand small {
+    font-size: 0.48rem;
+  }
+
+  .lab-language {
+    padding: 0 1rem;
+  }
+
+  .lab-concept-nav button {
+    display: grid;
+    gap: 0.15rem;
+  }
+
+  .lab-concept-nav button span {
+    display: block;
+  }
+
+  .lab-main,
+  .lab-stage {
+    min-height: 48rem;
+  }
+
+  .lab-stage-copy {
+    left: 1.1rem;
+  }
+
+  .lab-stage-copy h1 {
+    max-width: 11ch;
+    font-size: clamp(2.4rem, 13vw, 3.7rem);
+  }
+
+  .lab-stage-copy > span {
+    max-width: 90%;
+  }
+
+  .network-canvas,
+  .assembly-plane {
+    inset: 14rem 0.35rem 2.3rem;
+  }
+
+  .network-node {
+    min-width: 4.7rem;
+  }
+
+  .network-node span {
+    font-size: 0.57rem;
+  }
+
+  .network-node small {
+    display: none;
+  }
+
+  .network-node.is-core {
+    width: 6.5rem;
+    height: 6.5rem;
+  }
+
+  .network-readout {
+    right: 0.8rem;
+    bottom: 0.9rem;
+    width: 62%;
+  }
+
+  .network-readout p {
+    display: none;
+  }
+
+  .field-plane {
+    top: 10rem;
+  }
+
+  .energy-core {
+    top: 53%;
+    width: 13rem;
+  }
+
+  .field-plane::before {
+    top: 53%;
+    width: 23rem;
+  }
+
+  .field-plane::after {
+    top: 53%;
+    width: 17rem;
+  }
+
+  .field-signal {
+    top: calc(var(--y) + 2%);
+  }
+
+  .field-signal span {
+    font-size: 0.54rem;
+  }
+
+  .field-status {
+    right: 1rem;
+    bottom: 3.3rem;
+  }
+
+  .assembly-progress {
+    top: 49%;
+    width: 13rem;
+  }
+
+  .identity-fragment {
+    min-width: 4.8rem;
+  }
+
+  .identity-fragment strong {
+    font-size: 0.53rem;
+  }
+
+  .assembly-summary {
+    right: 0.75rem;
+    bottom: 1.2rem;
+    width: 60%;
+  }
+
+  .lab-footer {
+    grid-template-columns: 1fr auto;
+  }
+
+  .lab-footer span:nth-child(2) {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lab-shell *,
+  .lab-shell *::before,
+  .lab-shell *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
