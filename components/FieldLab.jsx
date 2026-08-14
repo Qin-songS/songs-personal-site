@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import VoicePrototype from "./VoicePrototype";
 import { profile } from "../src/profile";
 
 const directions = [
@@ -40,7 +39,7 @@ const sceneCopy = {
       title: "Still becoming.",
       intro: "Move through the three forces that shape what I pursue, refuse, and keep doing.",
       status: "NORTH STAR ACTIVE",
-      prompt: "MOVE · SELECT · ASK AI",
+      prompt: "MOVE · SELECT · PULSE",
     },
     editorial: {
       study: "PROFILE / KINETIC EDITORIAL",
@@ -64,7 +63,7 @@ const sceneCopy = {
       title: "我仍在成为。",
       intro: "探索三种力量：它们决定我追求什么、拒绝什么，以及为什么继续前进。",
       status: "北极星系统已启动",
-      prompt: "移动 · 选择 · 询问 AI",
+      prompt: "移动 · 选择 · 唤醒",
     },
     editorial: {
       study: "个人档案 / 动态编辑",
@@ -133,7 +132,7 @@ function directionFromPath() {
   return "organism";
 }
 
-function FieldHeader({ direction, changeDirection, locale, setLocale, openVoice }) {
+function FieldHeader({ direction, changeDirection, locale, setLocale }) {
   const isQuiet = direction === "quiet";
   const isEditorial = direction === "editorial";
 
@@ -161,18 +160,14 @@ function FieldHeader({ direction, changeDirection, locale, setLocale, openVoice 
 
       <div className="field-actions">
         {isQuiet ? (
-          <a className="field-ai-launch" href={profile.links.notion} target="_blank" rel="noreferrer">
+          <a className="field-action-link" href={profile.links.notion} target="_blank" rel="noreferrer">
             <i aria-hidden="true" /><span>NTN</span><small>OPEN NOTES</small>
           </a>
         ) : isEditorial ? (
-          <a className="field-ai-launch" href={profile.links.mailto}>
+          <a className="field-action-link" href={profile.links.mailto}>
             <i aria-hidden="true" /><span>MAIL</span><small>SAY HELLO</small>
           </a>
-        ) : (
-          <button className="field-ai-launch" type="button" onClick={openVoice}>
-            <i aria-hidden="true" /><span>AI</span><small>ASK SONGS</small>
-          </button>
-        )}
+        ) : null}
         <button
           className="field-language"
           type="button"
@@ -380,7 +375,7 @@ function LivingMaterial({ mode, pulse }) {
   return <canvas className="organism-material" ref={canvasRef} aria-hidden="true" />;
 }
 
-function OrganismPortrait({ active, setActive, pulse, setPulse, locale, openVoice }) {
+function OrganismPortrait({ active, setActive, pulse, setPulse, locale }) {
   const [preview, setPreview] = useState(null);
   const current = preview || active;
   const selected = signals.find((signal) => signal.id === current);
@@ -407,8 +402,8 @@ function OrganismPortrait({ active, setActive, pulse, setPulse, locale, openVoic
       <button
         className={`field-core field-core-pulse-${pulse % 2}`}
         type="button"
-        onClick={() => { setPulse((value) => value + 1); openVoice(); }}
-        aria-label={locale === "en" ? "Ask Songs AI" : "询问 Songs AI"}
+        onClick={() => setPulse((value) => value + 1)}
+        aria-label={locale === "en" ? "Pulse the North Star" : "唤醒北极星"}
       >
         <span className="field-core-ring field-core-ring-a" aria-hidden="true" />
         <span className="field-core-ring field-core-ring-b" aria-hidden="true" />
@@ -478,13 +473,6 @@ export default function FieldLab() {
   const [locale, setLocale] = useState("en");
   const [active, setActive] = useState(null);
   const [pulse, setPulse] = useState(0);
-  const [voiceOpen, setVoiceOpen] = useState(() => {
-    try {
-      return window.sessionStorage.getItem("songs-ai-dock-state") === "open";
-    } catch {
-      return false;
-    }
-  });
   const [pointer, setPointer] = useState({ x: 50, y: 50, ox: 0, oy: 0 });
   const directionIndex = useMemo(() => directions.findIndex((item) => item.id === direction), [direction]);
   const t = sceneCopy[locale][direction];
@@ -517,23 +505,6 @@ export default function FieldLab() {
     setPulse(0);
   };
 
-  const executeVoiceAction = (action) => {
-    if (action.locale) setLocale(action.locale);
-    if (action.direction) changeDirection(action.direction);
-    if (action.signal && signals.some((signal) => signal.id === action.signal)) setActive(action.signal);
-    setPulse((current) => current + 1);
-  };
-
-  const openVoice = () => {
-    try { window.sessionStorage.setItem("songs-ai-dock-state", "open"); } catch { /* optional */ }
-    setVoiceOpen(true);
-  };
-
-  const closeVoice = () => {
-    try { window.sessionStorage.setItem("songs-ai-dock-state", "closed"); } catch { /* optional */ }
-    setVoiceOpen(false);
-  };
-
   return (
     <div
       className={`field-shell field-${direction}`}
@@ -541,11 +512,11 @@ export default function FieldLab() {
       onPointerLeave={() => setPointer({ x: 50, y: 50, ox: 0, oy: 0 })}
       style={{ "--field-x": `${pointer.x}%`, "--field-y": `${pointer.y}%`, "--field-ox": `${pointer.ox}px`, "--field-oy": `${pointer.oy}px` }}
     >
-      <FieldHeader direction={direction} changeDirection={changeDirection} locale={locale} setLocale={setLocale} openVoice={openVoice} />
+      <FieldHeader direction={direction} changeDirection={changeDirection} locale={locale} setLocale={setLocale} />
       <main className={`field-main field-main-${direction}`} key={direction}>
         <div className="field-intro"><p>{t.study}</p><h1>{t.title}</h1><span>{t.intro}</span></div>
         {direction === "quiet" ? <QuietArchive locale={locale} /> : direction === "editorial" ? <EditorialProfile locale={locale} /> : (
-          <OrganismPortrait active={active} setActive={setActive} pulse={pulse} setPulse={setPulse} locale={locale} openVoice={openVoice} />
+          <OrganismPortrait active={active} setActive={setActive} pulse={pulse} setPulse={setPulse} locale={locale} />
         )}
       </main>
       <footer className="field-footer">
@@ -553,14 +524,6 @@ export default function FieldLab() {
         <span>{String(directionIndex + 1).padStart(2, "0")} / 03 · {t.status}</span>
         <span>{t.prompt}</span>
       </footer>
-      {!voiceOpen && (
-        <button className="field-dock-launcher" type="button" onClick={openVoice} aria-label={locale === "zh" ? "打开 Songs AI 助手" : "Open Songs AI assistant"}>
-          <i aria-hidden="true" />
-          <span>AI</span>
-          <small>{locale === "zh" ? "询问 SONGS" : "ASK SONGS"}</small>
-        </button>
-      )}
-      <VoicePrototype open={voiceOpen} onClose={closeVoice} locale={locale} onAction={executeVoiceAction} variant="dock" />
     </div>
   );
 }

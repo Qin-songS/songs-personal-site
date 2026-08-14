@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import LanguageSwitch from "./LanguageSwitch";
 import OrbitMark from "./OrbitMark";
-import VoicePrototype from "./VoicePrototype";
 import { profile } from "../src/profile";
 
 const copy = {
@@ -21,16 +20,11 @@ const copy = {
     purposeBody:
       "A first-year student at Shanghai University, studying Optoelectronic Information Science and Engineering—and building a happy, fulfilling life through work that matters.",
     motto: ["Every day", "is the day."],
-    aiEyebrow: "SONGS AI / VOICE + TEXT",
-    aiTitle: "Ask me what you need.",
-    aiText: "Meet Songs through conversation, or ask the assistant to take you somewhere on this site.",
-    aiAction: "Open assistant",
-    aiNote: "Voice begins after one permission tap",
     worldsKicker: "Three ways in",
     worldsTitle: "Choose a direction.",
     worlds: [
       { no: "A", title: "Thoughts", detail: "Notion · ideas · questions", href: "/field/thoughts/" },
-      { no: "B", title: "About", detail: "Living portrait · AI", href: "/field/about/" },
+      { no: "B", title: "About", detail: "Living portrait · principles", href: "/field/about/" },
       { no: "C", title: "Profile", detail: "Education · résumé · links", href: "/field/profile/" },
     ],
     contactKicker: "Direct contact",
@@ -54,16 +48,11 @@ const copy = {
     purposeBody:
       "上海大学光电信息科学与工程专业大一学生，希望通过有意义的工作，获得幸福而充实的人生。",
     motto: ["Every day", "is the day."],
-    aiEyebrow: "SONGS AI / 语音 + 文字",
-    aiTitle: "告诉我你需要什么。",
-    aiText: "通过对话认识秦松，也可以让助手直接带你前往网站中的任何部分。",
-    aiAction: "打开 AI 助手",
-    aiNote: "语音会在一次权限确认后开始",
     worldsKicker: "三个入口",
     worldsTitle: "选择一个方向。",
     worlds: [
       { no: "A", title: "思考", detail: "Notion · 想法 · 问题", href: "/field/thoughts/" },
-      { no: "B", title: "关于我", detail: "动态画像 · AI", href: "/field/about/" },
+      { no: "B", title: "关于我", detail: "动态画像 · 个人原则", href: "/field/about/" },
       { no: "C", title: "个人档案", detail: "教育 · 简历 · 链接", href: "/field/profile/" },
     ],
     contactKicker: "直接联系",
@@ -75,81 +64,8 @@ const copy = {
   },
 };
 
-const directionRoutes = {
-  quiet: "/field/thoughts/",
-  organism: "/field/about/",
-  editorial: "/field/profile/",
-};
-
 export default function HomePage({ locale }) {
   const t = useMemo(() => copy[locale], [locale]);
-  const [voiceOpen, setVoiceOpen] = useState(() => {
-    try {
-      return window.sessionStorage.getItem("songs-ai-dock-state") === "open";
-    } catch {
-      return false;
-    }
-  });
-
-  const rememberVoiceState = (open) => {
-    try {
-      window.sessionStorage.setItem("songs-ai-dock-state", open ? "open" : "closed");
-    } catch {
-      // The dock still works when session storage is restricted.
-    }
-  };
-
-  const openVoice = () => {
-    rememberVoiceState(true);
-    setVoiceOpen(true);
-  };
-
-  const closeVoice = () => {
-    rememberVoiceState(false);
-    setVoiceOpen(false);
-  };
-
-  useEffect(() => {
-    document.documentElement.lang = locale === "zh" ? "zh-CN" : "en";
-
-    const storageKey = "songs-ai-welcome-v2";
-    let alreadyWelcomed = false;
-    try {
-      alreadyWelcomed = window.sessionStorage.getItem(storageKey) === "shown";
-    } catch {
-      // The prominent AI launcher remains available when storage is restricted.
-    }
-
-    if (alreadyWelcomed) return undefined;
-
-    const timer = window.setTimeout(() => {
-      try {
-        window.sessionStorage.setItem(storageKey, "shown");
-      } catch {
-        // Opening the interface does not depend on storage access.
-      }
-      rememberVoiceState(true);
-      setVoiceOpen(true);
-    }, 1600);
-
-    return () => window.clearTimeout(timer);
-  }, [locale]);
-
-  const executeVoiceAction = (action) => {
-    if (action.locale) {
-      window.location.assign(action.locale === "zh" ? "/zh/" : "/");
-      return;
-    }
-
-    if (action.signal === "connect") {
-      closeVoice();
-      window.setTimeout(() => document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" }), 80);
-      return;
-    }
-
-    const destination = directionRoutes[action.direction];
-    if (destination) window.location.assign(destination);
-  };
 
   return (
     <>
@@ -163,9 +79,6 @@ export default function HomePage({ locale }) {
           {t.nav.map(([label, href]) => <a href={href} key={href}>{label}</a>)}
         </nav>
         <div className="portal-header-actions">
-          <button className="portal-header-ai" type="button" onClick={openVoice} aria-haspopup="dialog">
-            <i aria-hidden="true" /> AI
-          </button>
           <LanguageSwitch locale={locale} />
         </div>
       </header>
@@ -184,15 +97,6 @@ export default function HomePage({ locale }) {
             </p>
           </div>
 
-          <button className="portal-ai-launch" type="button" onClick={openVoice} aria-haspopup="dialog">
-            <span className="portal-ai-beacon" aria-hidden="true"><i /></span>
-            <span className="portal-ai-copy">
-              <small>{t.aiEyebrow}</small>
-              <strong>{t.aiTitle}</strong>
-              <span>{t.aiText}</span>
-            </span>
-            <span className="portal-ai-action"><strong>{t.aiAction} ↗</strong><small>{t.aiNote}</small></span>
-          </button>
         </section>
 
         <section className="portal-worlds" id="worlds">
@@ -226,7 +130,6 @@ export default function HomePage({ locale }) {
       </main>
 
       <footer><span>{t.footerLeft}</span><span>© {new Date().getFullYear()} songs.com</span><span>{t.footerRight}</span></footer>
-      <VoicePrototype open={voiceOpen} onClose={closeVoice} locale={locale} onAction={executeVoiceAction} variant="dock" />
     </>
   );
 }

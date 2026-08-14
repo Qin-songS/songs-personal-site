@@ -27,8 +27,8 @@ const pageDescription = isArticle
     ? "关于为作品与想法建立一个长期归档空间的简短说明。"
     : "A short note on building a durable home for work and ideas."
   : locale === "zh"
-    ? "秦松（Songs）的双语个人网站：目标、思考、个人档案、AI 助手与联系方式。"
-    : "The bilingual personal website of Qin Song (Songs): purpose, thoughts, profile, AI assistant, and contact.";
+    ? "秦松（Songs）的双语个人网站：目标、思考、个人档案与联系方式。"
+    : "The bilingual personal website of Qin Song (Songs): purpose, thoughts, profile, and contact.";
 
 document.title = pageTitle;
 document.documentElement.lang = locale === "zh" ? "zh-CN" : "en";

@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node --env-file-if-exists=.env.local --use-env-proxy ./node_modules/vite/bin/vite.js",
+    "dev": "vite",
     "build": "vite build && node scripts/prepare-sites.mjs",
     "preview": "vite preview"
   },

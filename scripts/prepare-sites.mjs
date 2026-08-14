@@ -12,10 +12,6 @@ await copyFile(
   resolve(dist, "server", "index.js"),
 );
 await copyFile(
-  resolve(root, "server", "ai.js"),
-  resolve(dist, "server", "ai.js"),
-);
-await copyFile(
   resolve(root, ".openai", "hosting.json"),
   resolve(dist, ".openai", "hosting.json"),
 );
